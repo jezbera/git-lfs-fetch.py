@@ -32,7 +32,7 @@ def get_cache_dir(git_dir, oid):
     return git_dir+'/lfs/objects/'+oid[:2]+'/'+oid[2:4]
 
 
-def get_lfs_endpoint_url(git_repo, checkout_dir):
+def get_lfs_endpoint_url(git_repo, checkout_dir, remote):
     try:
         with in_dir(checkout_dir):
             url = check_output(
@@ -41,7 +41,7 @@ def get_lfs_endpoint_url(git_repo, checkout_dir):
     except CalledProcessError:
         with in_dir(git_repo):
             url = check_output(
-                'git config --get remote.origin.url'.split()
+                ('git config --get remote.' + remote + '.url').split()
             ).strip().decode('utf8')
     if url.endswith('/'):
         url = url[:-1]
@@ -119,7 +119,7 @@ def link(cached, dst):
     os.chmod(dst, st.st_mode)
 
 
-def fetch(git_repo, checkout_dir=None, verbose=0):
+def fetch(git_repo, checkout_dir=None, verbose=0, remote='origin'):
     """Download all the files managed by Git LFS
     """
     git_dir = git_repo+'/.git' if os.path.isdir(git_repo+'/.git') else git_repo
@@ -187,7 +187,7 @@ def fetch(git_repo, checkout_dir=None, verbose=0):
         return
 
     # Fetch the URLs of the files from the Git LFS endpoint
-    lfs_url = get_lfs_endpoint_url(git_repo, checkout_dir)
+    lfs_url = get_lfs_endpoint_url(git_repo, checkout_dir, remote)
     urlSearch = re.search('https://([^:]+?)(?::(.*?))?@', lfs_url)
     username = None
     password = None

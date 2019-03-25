@@ -18,7 +18,7 @@ Basic: simply run ``python -m git_lfs`` in a normal Git repository.
 
 Advanced::
 
-    python -m git_lfs [-h] [-v] [git_repo] [checkout_dir]
+    python -m git_lfs [-h] [-v] [-r remote] [git_repo] [checkout_dir]
 
     positional arguments:
     git_repo       if it's bare you need to provide a checkout_dir
@@ -27,6 +27,7 @@ Advanced::
     optional arguments:
       -h, --help     show this help message and exit
       -v, --verbose
+      -r, --remote   use specified remote
 
 License
 =======
